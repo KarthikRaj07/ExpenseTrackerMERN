@@ -1,38 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import { LoginPage } from "./Pages/LoginPage";
+import { SignupPage } from "./Pages/SignupPage";
+import { ForgotPasswordPage } from "./Pages/ForgotPasswordPage";
+import { Dashboard } from "./Pages/Dashboard";
+import { Layout } from "./Components/layout/Layout";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+	const [path, setPath] = useState("/");
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-        <h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+	const navigate = (to) => setPath(to);
+
+	if (path === "/") return <LoginPage navigate={(to) => { if (to === '/dashboard') setIsAuthenticated(true); navigate(to); }} />;
+	if (path === "/signup") return <SignupPage navigate={navigate} />;
+	if (path === "/forgot") return <ForgotPasswordPage navigate={navigate} />;
+	if (path === "/dashboard")
+		return (
+			<Layout navigate={navigate} isAuthenticated={isAuthenticated}>
+				<Dashboard navigate={navigate} />
+			</Layout>
+		);
+
+	return <LoginPage navigate={navigate} />;
 }
-
-export default App
